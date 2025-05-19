@@ -67,7 +67,7 @@ event-server의 경우, 조건을 통과하고 들어온 정보에 대해 권한
 
 # API 구조 선택 이유
 
-### @All() 데코레이터
+### @All() 데코레이터a
 저는 gateway-server에서 모든 라우터에 대한 API 호출 방식을 @All 데코레이터를 활용하여 구현하였습니다.<br/>
 이 데코레이터를 선택한 이유는, 각 서버마다 구현한 API를 gateway-server에도 똑같이 구현할 경우 효율성이 떨어진다고 생각하였습니다.<br/>
 .env파일에 저장해둔 서버의 uri와 /gateway 뒤에 오는 라우터를 합쳐 실제 다른 서버에서 사용하는 API를 호출할 수 있도록 하였습니다.<br/>(ex. /gateway/event/readRewardLog)<br/>
