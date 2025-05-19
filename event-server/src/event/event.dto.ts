@@ -69,7 +69,7 @@ export class CreateRewardDto {
   quantity: number;
 }
 
-export class EventPartitionDto {
+export class EventParticipationDto {
   @IsNotEmpty()
   partition: boolean;
 

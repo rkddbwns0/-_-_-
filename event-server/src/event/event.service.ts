@@ -6,7 +6,7 @@ import { Reward, RewardDocument } from 'src/schema/reward.schema';
 import {
   CreateEventDto,
   CreateRewardDto,
-  EventPartitionDto,
+  EventParticipationDto,
   ReadRewardLogDto,
 } from './event.dto';
 import {
@@ -173,14 +173,14 @@ export class EventService {
 
   // 이벤트 참여
   // handler를 활용하여 이벤트 분류 별로 저장되는 조건 형식이 다름.
-  async eventPartition(eventPartitionDto: EventPartitionDto) {
+  async eventParticipation(eventParticipationDto: EventParticipationDto) {
     try {
       const event = await this.event.findOne({
-        event_no: eventPartitionDto.event_no,
+        event_no: eventParticipationDto.event_no,
       });
       const checkPartition = await this.userEventLog.findOne({
-        event_no: eventPartitionDto.event_no,
-        user_id: eventPartitionDto.user_id,
+        event_no: eventParticipationDto.event_no,
+        user_id: eventParticipationDto.user_id,
       });
 
       if (event?.state === false) {
@@ -190,22 +190,22 @@ export class EventService {
       if (checkPartition) {
         throw new BadRequestException('이미 이벤트에 참여 중입니다.');
       }
-      if (eventPartitionDto.partition === true) {
+      if (eventParticipationDto.partition === true) {
         const event = await this.event.findOne({
-          event_no: eventPartitionDto.event_no,
+          event_no: eventParticipationDto.event_no,
         });
         if (!event) {
           throw new BadRequestException('현재 진행 중인 이벤트가 아닙니다.');
         }
-        eventPartitionDto.event_type = event.condition.type;
+        eventParticipationDto.event_type = event.condition.type;
         const handler = handlerMap[event.classification];
         if (!handler) {
           throw new BadRequestException('이벤트 클래스가 정보가 없습니다.');
         }
 
         const initialData = await handler.getInintitalData();
-        eventPartitionDto.data = initialData;
-        const partition = await this.userEventLog.create(eventPartitionDto);
+        eventParticipationDto.data = initialData;
+        const partition = await this.userEventLog.create(eventParticipationDto);
         await partition.save();
         return { message: '이벤트를 수락하였습니다.', partition };
       } else {

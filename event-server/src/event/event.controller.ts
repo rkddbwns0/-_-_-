@@ -15,7 +15,7 @@ import { RoleGuard } from 'src/role/role.guard';
 import {
   CreateEventDto,
   CreateRewardDto,
-  EventPartitionDto,
+  EventParticipationDto,
   ReadRewardLogDto,
 } from './event.dto';
 import { Request, Response } from 'express';
@@ -69,15 +69,16 @@ export class EventController {
 
   // 이벤트 참여 contoller
   @SetMetadata('permission', ['req'])
-  @Post('/partitionEvent')
+  @Post('/participationEvent')
   async partitionEvent(
-    @Body() eventPartitionDto: EventPartitionDto,
+    @Body() eventPartitionDto: EventParticipationDto,
     @Req() req,
     @Res() res: Response,
   ) {
     try {
       eventPartitionDto.user_id = req.user.user_id;
-      const event = await this.eventService.eventPartition(eventPartitionDto);
+      const event =
+        await this.eventService.eventParticipation(eventPartitionDto);
       res.status(200).json({ event });
     } catch (error) {
       console.error(error);
