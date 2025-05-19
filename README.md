@@ -1,7 +1,14 @@
 # 넥슨 백엔드 과제 제출
 
-1. docker Compose 실행
-    docker-compose up --build
+# 사용 기술
+- Node.js(v.18)
+- NestJS
+- Docker + docker-compose
+- Mongodb
+
+# docker Compose
+docker Compose 실행
+- docker-compose up --build
 
 # 서버 구조
 1. gateway-server
