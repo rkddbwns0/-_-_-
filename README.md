@@ -7,8 +7,11 @@
 - Mongodb
 
 # docker Compose
-docker Compose 실행
+### docker Compose 실행
 - docker-compose up --build
+
+### mongodb
+- docker exec -it mongodb mongosh
 
 # 서버 구조
 
