@@ -58,16 +58,16 @@ docker Compose 실행
    - 모든 관리자가 사용할 수 있는 라우터로, 사용자에게 보상을 지급, 보상 요청 등에 대한 모든 로그를 확인할 수 있는 라우터입니다.
   
 # 조건 검증 방식
-auth-server에서 로그인을 할 경우 쿠키에 access_token과 refresh_token을 저장합니다.<br/>
-gateway-server에서 useGuard와 RolesGurad를 통해 auth-server에서 쿠키로 저장되어 넘어온 토큰을 검증하여 users 컬렉션에 저장된 refersh_token과 일치하는지 파악합니다.<br/>
-인증이 모두 통과될 경우, 모든 라우터에 대한 서비스를 role에 맞게 사용할 수 있도록 하였습니다.<br/>
-인증에 실패할 경우 모든 서비스를 사용할 수 없습니다.<br/>
-모든 라우터(login, signup 제외)는 요청을 보낼 때마다 인증 과정을 거치도록 하였습니다.<br/>
-event-server의 경우, 조건을 통과하고 들어온 정보에 대해 권한 검증을 한 번 더 실행하여 사용자 혹은 관리자가 조건에 맞는 서비스만 이용할 수 있도록 구현하였습니다.
+1. auth-server에서 로그인을 할 경우 쿠키에 access_token과 refresh_token을 저장합니다.<br/>
+2. gateway-server에서 useGuard와 RolesGurad를 통해 auth-server에서 쿠키로 저장되어 넘어온 토큰을 검증하여 users 컬렉션에 저장된 refersh_token과 일치하는지 파악합니다.<br/>
+3. 인증이 모두 통과될 경우, 모든 라우터에 대한 서비스를 role에 맞게 사용할 수 있도록 하였습니다.<br/>
+4. 인증에 실패할 경우 모든 서비스를 사용할 수 없습니다.<br/>
+5. 모든 라우터(login, signup 제외)는 요청을 보낼 때마다 인증 과정을 거치도록 하였습니다.<br/>
+6. event-server의 경우, 조건을 통과하고 들어온 정보에 대해 권한 검증을 한 번 더 실행하여 사용자 혹은 관리자가 조건에 맞는 서비스만 이용할 수 있도록 구현하였습니다.
 
 # API 구조 선택 이유
 
-### @All() 데코레이터
+### @All() 데코레이터 (ex. @All('/auth/*path))
 저는 gateway-server에서 모든 라우터에 대한 API 호출 방식을 @All 데코레이터를 활용하여 구현하였습니다.<br/>
 이 데코레이터를 선택한 이유는, 각 서버마다 구현한 API를 gateway-server에도 똑같이 구현할 경우 효율성이 떨어진다고 생각하였습니다.<br/>
 .env파일에 저장해둔 서버의 uri와 /gateway 뒤에 오는 라우터를 합쳐 실제 다른 서버에서 사용하는 API를 호출할 수 있도록 하였습니다.<br/>(ex. /gateway/event/readRewardLog)<br/>
