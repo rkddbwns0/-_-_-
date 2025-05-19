@@ -480,7 +480,13 @@ export class EventService {
         )
         .exec();
 
-      await this.rewardPaymentDetail.create(
+      if (!rewardLogUpdate) {
+        throw new BadRequestException(
+          '보상 지급 상태 변경경에 실패하였습니다.',
+        );
+      }
+
+      const rewardPayment = await this.rewardPaymentDetail.create(
         rewardLog.map((data) => ({
           user_id: data?.user_id,
           event_no: data?.event_no,
@@ -489,6 +495,10 @@ export class EventService {
           payment_at: new Date(),
         })),
       );
+
+      if (!rewardPayment) {
+        throw new BadRequestException('보상 지급 명단 저장에 실패하였습니다.');
+      }
 
       const data: RewardLogParmas[] = rewardLog.map((data) => ({
         type: '보상 지급',
@@ -505,9 +515,11 @@ export class EventService {
 
       const log = await rewardLogHandlerMany(data);
 
-      console.log(log);
+      const saveLog = await this.rewardLog.create(log);
 
-      await this.rewardLog.create(log);
+      if (!saveLog) {
+        throw new BadRequestException('보상 지급 로그 저장에 실패하였습니다.');
+      }
 
       return true;
     } catch (e) {

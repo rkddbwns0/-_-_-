@@ -8,6 +8,7 @@ services:
             - ./mongo-init:/docker-entrypoint-initdb.d:ro
         networks:
             - app-network
+        restart: unless-stopped
     gateway-server:
         build: ./gateway-server
         ports:
